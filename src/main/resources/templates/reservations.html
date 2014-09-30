@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Reservations</title>
+    <meta name="description" content="A simple application demonstrating how to use Spring Boot for evil."/>
+    <meta name="viewport" content="width=device-width"/>
+</head>
+<body>
+<h1> Reservations </h1>
+
+<div ng-controller="ReservationController" id="reservations">
+    <div ng-repeat="r in reservations">
+        <b>{{ r.id }}</b> {{ r.lastName }}, {{ r.firstName }}
+    </div>
+</div>
+
+<script src="js/lib/requirejs/require.js" data-main="js/reservations.js"></script>
+
+</body>
+</html>
