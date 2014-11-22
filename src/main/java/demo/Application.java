@@ -31,14 +31,6 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
 
-// todo:
-// todo websockets
-// todo java 8 Optional (Data, @RequestParam, etc)
-// todo jta
-// todo thymeleaf
-// todo rest
-// todo mvc
-
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -86,7 +78,7 @@ public class Application {
 
         @Override
         public void configureMessageBroker(MessageBrokerRegistry registry) {
-            registry.enableSimpleBroker("/topic/");
+            registry.enableStompBrokerRelay("/topic");
         }
     }
 }
@@ -116,6 +108,7 @@ class ReservationController {
 @RestController
 @RequestMapping("/reservations")
 class ReservationRestController {
+
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final JmsMessagingTemplate jmsTemplate;
     private final ReservationRepository reservationRepository;
@@ -149,7 +142,8 @@ class ReservationRestController {
         Reservation reservation = this.reservationRepository.save(r);
         this.jmsTemplate.convertAndSend("reservation", reservation);
         this.simpMessagingTemplate.convertAndSend("/topic/alarms", reservation);
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/reservations/{id}").buildAndExpand(r.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/reservations/{id}").buildAndExpand(r.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 }
@@ -191,5 +185,4 @@ class Reservation {
     private Long id;
 
     private String firstName, lastName;
-
 }
